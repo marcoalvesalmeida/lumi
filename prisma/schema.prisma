@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +5,38 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Invoice {
+  id             Int          @id @default(autoincrement())
+  monthRef       String       @db.VarChar(8)
+  kwhCount       Int
+  price          Decimal      @db.Decimal(10, 2)
+  sceeKwh        Int
+  sceePrice      Decimal      @db.Decimal(10, 2)
+  gdKwh          Int
+  gdPrice        Decimal      @db.Decimal(10, 2)
+  publicContrib  Decimal      @db.Decimal(10, 2)
+  installation   Installation @relation(fields: [installationId], references: [id])
+  installationId Int
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model Installation {
+  id        Int       @id @default(autoincrement())
+  client    Client    @relation(fields: [clientId], references: [id])
+  clientId  Int
+  invoices  Invoice[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Client {
+  id            Int            @id @default(autoincrement())
+  name          String?        @db.VarChar(100)
+  clientCode    String         @unique
+  installations Installation[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 }
