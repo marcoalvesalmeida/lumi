@@ -1,11 +1,11 @@
 {
-    "name": "lumi",
+    "name": "lumi-api",
     "version": "1.0.0",
     "private": true,
     "type": "module",
     "scripts": {
         "start": "nodemon",
-        "extract:data": "node --loader ts-node/esm src/modules/extractor/extract.ts",
+        "extract:data": "tsx src/modules/extractor/extract.ts",
         "format:check": "prettier --check .",
         "format:write": "prettier --write .",
         "lint:check": "eslint .",
@@ -13,21 +13,22 @@
     },
     "dependencies": {
         "@prisma/client": "5.14.0",
+        "body-parser": "^1.20.2",
         "debug": "~2.6.9",
         "express": "~4.16.1",
         "morgan": "~1.9.1",
         "nodemon": "^3.1.0",
-        "pdf-parse": "^1.1.1",
-        "pdf2json": "^3.1.2",
         "pdfreader": "^3.0.2",
-        "prisma": "^5.14.0"
+        "prisma": "^5.14.0",
+        "swagger-ui-express": "^5.0.0",
+        "zod": "^3.23.8"
     },
     "devDependencies": {
         "@eslint/js": "^9.3.0",
         "@types/express": "^4.17.21",
         "@types/morgan": "^1.9.9",
         "@types/node": "^20.12.12",
-        "@types/pdf-parse": "^1.1.4",
+        "@types/swagger-ui-express": "^4.1.6",
         "eslint": "^9.3.0",
         "eslint-config-prettier": "^9.1.0",
         "eslint-import-resolver-typescript": "^3.6.1",
@@ -35,6 +36,7 @@
         "globals": "^15.3.0",
         "prettier": "^3.2.5",
         "ts-node": "^10.9.2",
+        "tsx": "^4.10.5",
         "typescript": "^5.4.5",
         "typescript-eslint": "^7.10.0"
     }
