@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import clsx from 'clsx'; // Importando clsx
+import { FormikProps } from 'formik';
+import { HomeFormValues } from '@/pages/Home';
 
 export type Option = {
     text: string,
@@ -8,25 +10,28 @@ export type Option = {
 }
 
 interface Props {
-    id: string,
-    placeholder: string,
+    id: string
+    placeholder: string
     label?: string
     type: "text" | "email" | "number" | "select"
     options?: Option[]
-    selectCallback?: (selected: string) => void;
+    selectCallback?: (selected: string) => void
+    formik: FormikProps<HomeFormValues>;
 }
 
-const Input: React.FC<Props> = ({id, placeholder, label, type, options, selectCallback}) => {
+const Input: React.FC<Props> = ({id, placeholder, label, type, options, selectCallback, formik}) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [selected, setSelected] = useState<string>(options?.find(o => o.selected)?.text || '');
 
     function handleSelect(option: Option){
-        setSelected(option.value);
+        setIsOpen(false);
+        setSelected(option.text);
         selectCallback?.(option.value);
+        formik.setFieldValue(id, option.value);
     }
 
     return (
-        <div className="max-w-sm mx-auto">
+        <div className="min-w-48" >
             {label && label.length > 0 && (
                 <label 
                     htmlFor={id}
