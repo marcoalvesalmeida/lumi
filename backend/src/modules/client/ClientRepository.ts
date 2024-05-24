@@ -1,3 +1,4 @@
+import { Installation } from "@prisma/client";
 import { prisma } from "../../db";
 
 export class ClientRepository {

@@ -1,22 +1,18 @@
 import BarChartKwh, { KwhData } from '@/components/ChartBarKwh';
 import BarChartMoney, { MoneyData } from '@/components/ChartBarMoney';
+import EmptyDataMessage from '@/components/EmptyDataMessage';
 import Input from '@/components/Input';
 import { useData } from '@/hooks/useData';
 import { getInvoicesByClient } from '@/services/Invoices';
 import { User } from '@phosphor-icons/react';
-import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 
 const Dashboard: React.FC = () => {
     const [kwhData, setKwhData] = useState<KwhData[]>([] as KwhData[]);
     const [moneyData, setMoneyData] = useState<MoneyData[]>([] as MoneyData[]);
-    const {clients, selectedClient} = useData();
-
-    const location = useLocation();
+    const {clients, selectedClient, setSelectedClient} = useData();
 
     async function getInvoices(clientID: string) {
-        console.log(clientID);
         const {success, invoices } = await getInvoicesByClient(clientID);
 
           if (success && invoices) {
@@ -38,33 +34,17 @@ const Dashboard: React.FC = () => {
     }
 
     useEffect(() => {
-        if(location.state?.client){
-            getInvoices(location.state.client);
+        if(selectedClient !== ''){
+            getInvoices(selectedClient);
         }
-    }, [location.state?.client]);
-    
-    const formik = useFormik({
-    initialValues: {
-        client: '',
-    },
-    onSubmit: async (values) => {
-        if(!values.client || values.client === ''){
-            return;
-        }
-        await getInvoices(values.client);
-    },
-    });
-
-    function handleSelectCallback(){
-        formik.handleSubmit();
-    }
+    }, [selectedClient]);
     
 
     return (
         <section className='w-full h-auto py-10 px-20'>
             <div className='w-full h-10 flex justify-between items-center'>
                 <h1 className='text-2xl'>Dashboard</h1>
-                <form className='flex gap-4 items-center' onSubmit={formik.handleSubmit}>
+                <div className='flex gap-4 items-center'>
                     <User size={30} />
                     <Input 
                         id='client' 
@@ -80,20 +60,26 @@ const Dashboard: React.FC = () => {
                                 })) : [])
                             ]
                         } 
-                        selectCallback={() => handleSelectCallback()}
-                        formik={formik}
+                        selectCallback={setSelectedClient}
                     />
-                </form>
+                </div>
             </div>
             <div className='flex flex-col pt-10'>
-                <div className='w-full h-80 flex flex-col items-center'>
-                    <h2>Consumo de Energia Elétrica x Energia Compensada por Mês (kWh)</h2>
-                    <BarChartKwh data={kwhData} />
-                </div>
-                <div className='w-full h-80 mt-20 flex flex-col items-center'>
-                    <h2>Valor Total sem GD x Economia GD por Mês (R$)</h2>
-                    <BarChartMoney data={moneyData}/>
-                </div>
+                {kwhData.length > 0 && moneyData.length > 0 && selectedClient !== '' && (
+                    <>
+                        <div className='w-full h-80 flex flex-col items-center'>
+                            <h2>Consumo de Energia Elétrica x Energia Compensada por Mês (kWh)</h2>
+                            <BarChartKwh data={kwhData} />
+                        </div>
+                        <div className='w-full h-80 mt-20 flex flex-col items-center'>
+                            <h2>Valor Total sem GD x Economia GD por Mês (R$)</h2>
+                            <BarChartMoney data={moneyData}/>
+                        </div>
+                    </>
+                )}
+                {(!kwhData || kwhData.length === 0 || !moneyData || moneyData.length === 0 || selectedClient === '') && (
+                    <EmptyDataMessage />
+                )}
             </div>
         </section>
     );

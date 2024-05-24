@@ -16,7 +16,7 @@ interface Props {
     type: "text" | "email" | "number" | "select"
     options?: Option[]
     selectCallback?: (selected: string) => void
-    formik: FormikProps<HomeFormValues>;
+    formik?: FormikProps<HomeFormValues>;
 }
 
 const Input: React.FC<Props> = ({id, placeholder, label, type, options, selectCallback, formik}) => {
@@ -27,7 +27,7 @@ const Input: React.FC<Props> = ({id, placeholder, label, type, options, selectCa
         setIsOpen(false);
         setSelected(option.text);
         selectCallback?.(option.value);
-        formik.setFieldValue(id, option.value);
+        formik?.setFieldValue(id, option.value);
     }
 
     return (

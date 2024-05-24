@@ -23,11 +23,7 @@ const Home: React.FC = () => {
     },
     onSubmit: values => {
       setSelectedClient(values.client);
-      navigate('/dashboard', {
-        state: {
-          client: values.client
-        }
-      });
+      navigate('/dashboard');
     },
   });
 
@@ -37,7 +33,7 @@ const Home: React.FC = () => {
           <div className='flex flex-col gap-5 justify-center items-center'>
             <span className='text-9xl font-bold italic text-blue-500'>LUMI</span>
             <h1>Olá, é bom ter você aqui!</h1>
-            <p>Para começar escolha um cliente:</p>
+            <p className='text-lg'>Para começar escolha um cliente:</p>
             <form className='flex flex-col items-center gap-2' onSubmit={formik.handleSubmit}>
               <Input 
                 id='client' 
@@ -61,9 +57,8 @@ const Home: React.FC = () => {
             </form>
           </div>
             <div className='mt-20'>
-              <span>
-                Não se preocupe, você poderá trocar a qualquer momento clicando
-                no seguinte menu: 
+              <span className='italic'>
+                Não se preocupe, você poderá trocar o cliente a qualquer momento.
               </span>
             </div>
         </section>

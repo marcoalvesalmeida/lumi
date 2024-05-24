@@ -10,5 +10,6 @@ router.get("/", function (req, res) {
 
 router.get("/clients", clientController.handleListAllClients);
 router.get("/invoices/:client", invoiceController.handleFindInvoiceByClient);
+router.get("/invoices/paths/:client", invoiceController.handleFindInvoicePathByClient);
 
 export { router };

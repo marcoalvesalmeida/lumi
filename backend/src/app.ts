@@ -6,6 +6,7 @@ import swaggerFile from "./swagger/output.json";
 
 import { router } from "./routes";
 import bodyParser from "body-parser";
+import path from "path";
 
 const PORT = 3333;
 
@@ -15,8 +16,9 @@ app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use("/api/", router);
+app.use('/files', express.static(path.join(process.cwd(), 'src/modules/extractor/invoices')))
 
+app.use("/api/", router);
 app.use(
     "/api/docs",
     swaggerUi.serve, 

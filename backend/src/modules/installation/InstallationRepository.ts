@@ -1,13 +1,14 @@
 import { prisma } from "../../db";
 
 export class InstallationRepository {
-    async findByClientId(clientId: number){
+    async findByClientId(clientId: number, selectInvoices: boolean) {
         const installations = await prisma.installation.findMany({
             where: {
                 clientId: clientId
             },
             select: {
-                invoices: true
+                installationCode: true,
+                invoices: selectInvoices
             }
         });
 

@@ -13,9 +13,25 @@ export interface Invoice {
     installationId: number;
 }
 
+export interface InvoiceFiles {
+    installation: string;
+    files: string[]
+}
+
+export interface PathData {
+    baseURL: string;
+    data: InvoiceFiles[]
+}
+
 export interface GetAllInvoicesResponse {
     success: boolean;
     invoices?: Invoice[];
+    error?: string;
+}
+
+export interface GetInvoicesPathsResponse {
+    success: boolean;
+    data?: PathData;
     error?: string;
 }
 
@@ -29,6 +45,29 @@ export const getInvoicesByClient = async (clientID: string): Promise<GetAllInvoi
             return {
                 success: true,
                 invoices: data.data
+            };
+        } else {
+            return {
+                success: false,
+                error: ERROR_MESSAGE
+            };
+        }
+    } catch (error) {
+        return {
+            success: false,
+            error: ERROR_MESSAGE
+        };
+    }
+};
+
+export const getInvoicesPathsByClient = async (clientID: string): Promise<GetInvoicesPathsResponse> => {
+    try {
+        const { data } = await api.get(`/invoices/paths/${clientID}`);
+
+        if (data?.success) {
+            return {
+                success: true,
+                data: data,
             };
         } else {
             return {
