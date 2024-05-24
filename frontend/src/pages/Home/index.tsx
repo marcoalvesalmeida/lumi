@@ -4,29 +4,30 @@ import { useFormik } from 'formik';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 
-import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import { useData } from '@/hooks/useData';
 
 export type HomeFormValues = {
   client: string
 }
 
 const Home: React.FC = () => {
-  const [selectedClient, setSelectedClient] = useState<string>('');
+  const [selectedClientLocal, setSelectedClientLocal] = useState<string>('');
+  const {clients, setSelectedClient} = useData();
 
   const navigate = useNavigate();
-
-  const validationSchema = Yup.object().shape({
-    client: Yup.string().required('É obrigatório selecionar um cliente!'),
-  });
 
   const formik = useFormik({
     initialValues: {
       client: '',
     },
-    validationSchema: validationSchema,
     onSubmit: values => {
-      navigate(`/dashboard?client=${values.client}`);
+      setSelectedClient(values.client);
+      navigate('/dashboard', {
+        state: {
+          client: values.client
+        }
+      });
     },
   });
 
@@ -44,14 +45,17 @@ const Home: React.FC = () => {
                 type='select' 
                 options={
                   [
-                    {text: 'Selecione um cliente', value: '', selected: true},
-                    {text: 'Cliente 1', value: 'cliente'}
+                      { text: 'Selecione um cliente', value: '', selected: true },
+                      ...(clients ? clients.map((clientAPI) => ({
+                          text: clientAPI.clientCode,
+                          value: clientAPI.id.toString()
+                      })) : [])
                   ]
-                } 
-                selectCallback={setSelectedClient}
+              } 
+                selectCallback={setSelectedClientLocal}
                 formik={formik}
               />
-              <Button onClick={formik.handleSubmit} disabled={selectedClient === ''}>
+              <Button onClick={formik.handleSubmit} disabled={selectedClientLocal === ''}>
                 Continuar
               </Button>
             </form>

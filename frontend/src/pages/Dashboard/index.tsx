@@ -1,36 +1,70 @@
-import BarChartKwh from '@/components/ChartBarKwh';
+import BarChartKwh, { KwhData } from '@/components/ChartBarKwh';
+import BarChartMoney, { MoneyData } from '@/components/ChartBarMoney';
 import Input from '@/components/Input';
+import { useData } from '@/hooks/useData';
+import { getInvoicesByClient } from '@/services/Invoices';
 import { User } from '@phosphor-icons/react';
 import { useFormik } from 'formik';
-import React, { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import * as Yup from 'yup';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const Dashboard: React.FC = () => {
-    const [selectedClient, setSelectedClient] = useState<string>('');
-    const [searchparams] = useSearchParams();
-    const client = searchparams.get('client') || 'No client specified';
+    const [kwhData, setKwhData] = useState<KwhData[]>([] as KwhData[]);
+    const [moneyData, setMoneyData] = useState<MoneyData[]>([] as MoneyData[]);
+    const {clients, selectedClient} = useData();
 
-    const validationSchema = Yup.object().shape({
-        client: Yup.string().required('É obrigatório selecionar um cliente!'),
-      });
+    const location = useLocation();
+
+    async function getInvoices(clientID: string) {
+        console.log(clientID);
+        const {success, invoices } = await getInvoicesByClient(clientID);
+
+          if (success && invoices) {
+            setKwhData(
+                invoices.map(invoice => ({
+                    kwh: invoice.kwhCount + invoice.sceeKwh,
+                    kwhGD: invoice.gdKwh,
+                    month: invoice.monthRef
+                }))
+            );
+            setMoneyData(
+                invoices.map(invoice => ({
+                    cost: parseFloat(invoice.price) + parseFloat(invoice.sceePrice) + parseFloat(invoice.publicContrib),
+                    economy: Math.abs(parseFloat(invoice.gdPrice)),
+                    month: invoice.monthRef
+                }))
+            );
+        }
+    }
+
+    useEffect(() => {
+        if(location.state?.client){
+            getInvoices(location.state.client);
+        }
+    }, [location.state?.client]);
     
-      const formik = useFormik({
-        initialValues: {
-          client: '',
-        },
-        validationSchema: validationSchema,
-        onSubmit: values => {
-          console.log(values);
-        },
-      });
+    const formik = useFormik({
+    initialValues: {
+        client: '',
+    },
+    onSubmit: async (values) => {
+        if(!values.client || values.client === ''){
+            return;
+        }
+        await getInvoices(values.client);
+    },
+    });
+
+    function handleSelectCallback(){
+        formik.handleSubmit();
+    }
     
 
     return (
         <section className='w-full h-auto py-10 px-20'>
-            <div className='w-full flex justify-between items-center'>
+            <div className='w-full h-10 flex justify-between items-center'>
                 <h1 className='text-2xl'>Dashboard</h1>
-                <div className='flex gap-4 items-center'>
+                <form className='flex gap-4 items-center' onSubmit={formik.handleSubmit}>
                     <User size={30} />
                     <Input 
                         id='client' 
@@ -38,35 +72,27 @@ const Dashboard: React.FC = () => {
                         type='select' 
                         options={
                             [
-                                {text: 'Selecione um cliente', value: '', selected: !client || client === ''},
-                                {text: 'Cliente 1', value: 'cliente', selected: client === 'cliente'}
+                                { text: 'Selecione um cliente', value: '', selected: selectedClient === '' },
+                                ...(clients ? clients.map((clientAPI) => ({
+                                    text: clientAPI.clientCode,
+                                    value: clientAPI.id.toString(),
+                                    selected: selectedClient === clientAPI.id.toString()
+                                })) : [])
                             ]
                         } 
-                        selectCallback={setSelectedClient}
+                        selectCallback={() => handleSelectCallback()}
                         formik={formik}
                     />
-                </div>
+                </form>
             </div>
             <div className='flex flex-col pt-10'>
                 <div className='w-full h-80 flex flex-col items-center'>
-                    <h2>Consumo e Geração Distribuída de Energia por Mês</h2>
-                    <BarChartKwh data={
-                        [
-                            { kwh: 100, kwhGD: 20, month: 'JAN/2023' },
-                            { kwh: 500, kwhGD: 600, month: 'FEV/2023' },
-                            { kwh: 500, kwhGD: 100, month: 'MAR/2023' }
-                        ]
-                    } />
+                    <h2>Consumo de Energia Elétrica x Energia Compensada por Mês (kWh)</h2>
+                    <BarChartKwh data={kwhData} />
                 </div>
                 <div className='w-full h-80 mt-20 flex flex-col items-center'>
-                    <h2>Consumo e Geração Distribuída de Energia por Mês</h2>
-                    <BarChartKwh data={
-                        [
-                            { kwh: 100, kwhGD: 20, month: 'JAN/2023' },
-                            { kwh: 500, kwhGD: 600, month: 'FEV/2023' },
-                            { kwh: 500, kwhGD: 100, month: 'MAR/2023' }
-                        ]
-                    } />
+                    <h2>Valor Total sem GD x Economia GD por Mês (R$)</h2>
+                    <BarChartMoney data={moneyData}/>
                 </div>
             </div>
         </section>

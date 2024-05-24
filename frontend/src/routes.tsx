@@ -7,6 +7,7 @@ import {
 import Home from '@/pages/Home';
 import Dashboard from "./pages/Dashboard";
 import DefaultLayout from "./layouts/default";
+import InvoicesLibrary from "./pages/InvoicesLibrary";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -16,6 +17,7 @@ const router = createBrowserRouter(
         element={<DefaultLayout />}
       >
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/invoices-library" element={<InvoicesLibrary />} />
       </Route>
     </>
 ));

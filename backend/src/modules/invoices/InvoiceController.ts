@@ -19,7 +19,7 @@ class InvoiceController {
 
             return response.status(200).json({
                 success: true,
-                data: installations.map(installation => installation.invoices),
+                data: installations.flatMap(installation => installation.invoices),
             });
         } catch (error) {
             if (error instanceof z.ZodError) {
@@ -29,7 +29,6 @@ class InvoiceController {
                     strack: error
                 });
             }
-            console.error('Internal server error:', error);
             return response.status(500).json({
                 success: false,
                 error: 'There was an internal server problem, please try again!',

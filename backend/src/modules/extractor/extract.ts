@@ -73,7 +73,7 @@ async function main() {
             const electricityPrice = data[electricityPosition + 4];
 
             const electricitySCEEPosition = data.findIndex((element) =>
-                element.includes("Energia SCEE"),
+                element.includes("Energia SCEE") || element.includes("En comp. s/ ICMS"),
             );
             const electricitySCEEKwh =
                 electricitySCEEPosition !== -1
@@ -85,7 +85,7 @@ async function main() {
                     : "0";
 
             const electricityGDPosition = data.findIndex((element) =>
-                element.includes("Energia compensada GD I"),
+                element.includes("Energia compensada GD I") || element.includes("Energia injetada HFP"),
             );
             const electricityGDKwh =
                 electricityGDPosition !== -1
@@ -153,13 +153,13 @@ async function main() {
                 data: {
                     installationId: installationIdDB,
                     monthRef: monthRef.trim().split(' ')[0],
-                    kwhCount: parseInt(electricityKwh.trim(), 10),
-                    price: parseFloat(electricityPrice.trim()),
-                    sceeKwh: parseInt(electricitySCEEKwh.trim(), 10),
-                    sceePrice: parseFloat(electricitySCEEPrice.trim()),
-                    gdKwh: parseInt(electricityGDKwh.trim(), 10),
-                    gdPrice: parseFloat(electricityGDPrice.trim()),
-                    publicContrib: parseFloat(publicContribution.trim()),
+                    kwhCount: parseInt(electricityKwh.trim().replace(/\./g, "")),
+                    price: parseFloat(electricityPrice.trim().replace(/\./g, "").replace(",", ".")),
+                    sceeKwh: parseInt(electricitySCEEKwh.trim().replace(/\./g, "")),
+                    sceePrice: parseFloat(electricitySCEEPrice.trim().replace(/\./g, "").replace(",", ".")),
+                    gdKwh: parseInt(electricityGDKwh.trim().replace(/\./g, "")),
+                    gdPrice: parseFloat(electricityGDPrice.trim().replace(/\./g, "").replace(",", ".")),
+                    publicContrib: parseFloat(publicContribution.trim().replace(/\./g, "").replace(",", ".")),
                 },
             });
         }        

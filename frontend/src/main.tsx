@@ -6,9 +6,12 @@ import {
 
 import './styles/global.css';
 import { router } from './routes.tsx';
+import { DataProvider } from './context/DataContext.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <DataProvider>
+      <RouterProvider router={router} />
+    </DataProvider>
   </React.StrictMode>,
 );

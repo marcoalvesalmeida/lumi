@@ -5,30 +5,30 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Toolti
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-export type KwhData = {
-     kwh: number, 
-     kwhGD: number, 
+export type MoneyData = {
+     cost: number, 
+     economy: number, 
      month: string 
 }
 
 interface Props {
-  data: KwhData[]
+  data: MoneyData[]
 }
 
-const BarChartKwh: React.FC<Props> = ({data}) => {
+const BarChartMoney: React.FC<Props> = ({data}) => {
   const chartData = {
     labels: data.map(item => item.month),
     datasets: [
       {
-        label: 'Consumo (kWh)',
-        data: data.map(item => item.kwh),
+        label: 'Valor Total sem GD (R$)',
+        data: data.map(item => item.cost),
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
         borderColor: 'rgba(255, 99, 132, 1)',
         borderWidth: 1
       },
       {
-        label: 'Energia Compensada (kWh)',
-        data: data.map(item => item.kwhGD),
+        label: 'Economia GD (R$)',
+        data: data.map(item => item.economy),
         backgroundColor: 'rgba(37, 99, 235, 0.5)',
         borderColor: 'rgba(37, 99, 235, 1)',
         borderWidth: 1
@@ -39,4 +39,4 @@ const BarChartKwh: React.FC<Props> = ({data}) => {
   return <Bar data={chartData} />;
 };
 
-export default BarChartKwh;
+export default BarChartMoney;

@@ -1,4 +1,5 @@
 import express from "express";
+import cors from 'cors';
 import logger from "morgan";
 import swaggerUi from "swagger-ui-express";
 import swaggerFile from "./swagger/output.json";
@@ -12,6 +13,7 @@ const app = express();
 
 app.use(logger("dev"));
 app.use(bodyParser.json());
+app.use(cors());
 
 app.use("/api/", router);
 
