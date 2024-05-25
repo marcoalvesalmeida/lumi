@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useEffect, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 import {
   getAllClients,
   Client,
@@ -12,7 +12,7 @@ interface DataContextType {
 }
 
 export const DataContext = createContext<DataContextType | undefined>(
-  undefined,
+  undefined
 );
 
 interface DataProviderProps {

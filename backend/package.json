@@ -5,7 +5,10 @@
     "type": "module",
     "scripts": {
         "start": "nodemon",
+        "start:prod": "node dist/app.js",
+        "build": "npx tsc",
         "extract:data": "tsx src/modules/extractor/extract.ts",
+        "extract:data:prod": "node dist/src/modules/extractor/extract.js",
         "format:check": "prettier --check .",
         "format:write": "prettier --write .",
         "lint:check": "eslint .",
@@ -23,6 +26,7 @@
         "pdfreader": "^3.0.2",
         "prisma": "^5.14.0",
         "swagger-ui-express": "^5.0.0",
+        "tsc": "^2.0.4",
         "zod": "^3.23.8"
     },
     "devDependencies": {
