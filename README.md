@@ -84,7 +84,7 @@ https://lumi-roan.vercel.app/
   </a>
 </p>
 
-## Prerequisites
+## Pré-requisitos
 
 Para utilizar esse projeto localmente é necessário a instalação do NodeJS, bem como a instalação do Yarn, Docker e Docker Compose.
 
