@@ -108,7 +108,7 @@ const Input: React.FC<Props> = ({
             </svg>
           </div>
           {isOpen && (
-            <ul className="absolute left-0 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg dark:bg-gray-700 dark:border-gray-600 z-10">
+            <ul className="absolute left-0 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-10">
               {options.map((option) => (
                 <li
                   key={option.value}
