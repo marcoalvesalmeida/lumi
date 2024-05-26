@@ -86,8 +86,7 @@ const Input: React.FC<Props> = ({
         >
           <div
             className={clsx(
-              "flex items-center justify-between bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5 cursor-pointer",
-              { "dark:bg-gray-700 dark:border-gray-600": isOpen }
+              "flex items-center justify-between bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5 cursor-pointer"
             )}
             onClick={() => setIsOpen(!isOpen)}
             data-testid={id}
