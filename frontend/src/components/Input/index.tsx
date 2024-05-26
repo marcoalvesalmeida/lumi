@@ -30,7 +30,7 @@ const Input: React.FC<Props> = ({
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selected, setSelected] = useState<string>(
-    options?.find((o) => o.selected)?.text || "",
+    options?.find((o) => o.selected)?.text || ""
   );
   const selectRef = useRef<HTMLDivElement>(null);
 
@@ -74,7 +74,7 @@ const Input: React.FC<Props> = ({
           placeholder={placeholder}
           className={clsx(
             "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5",
-            "dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500",
+            "dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           )}
         />
       )}
@@ -87,9 +87,10 @@ const Input: React.FC<Props> = ({
           <div
             className={clsx(
               "flex items-center justify-between bg-gray-50 border border-gray-300 text-sm rounded-lg p-2.5 cursor-pointer",
-              { "dark:bg-gray-700 dark:border-gray-600": isOpen },
+              { "dark:bg-gray-700 dark:border-gray-600": isOpen }
             )}
             onClick={() => setIsOpen(!isOpen)}
+            data-testid={id}
           >
             <span className="block">{selected}</span>
             <svg
