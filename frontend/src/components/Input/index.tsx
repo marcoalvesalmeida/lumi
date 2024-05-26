@@ -112,7 +112,7 @@ const Input: React.FC<Props> = ({
               {options.map((option) => (
                 <li
                   key={option.value}
-                  className="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
+                  className="p-2 cursor-pointer hover:bg-gray-100"
                   onClick={() => {
                     handleSelect(option);
                     setIsOpen(false);
